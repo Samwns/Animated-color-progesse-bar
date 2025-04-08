@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Barra SVG Dinâmica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -11,45 +11,88 @@
       padding: 0;
       box-sizing: border-box;
     }
-    body {
+    html, body {
       background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    svg {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       font-family: 'Quicksand', sans-serif;
     }
   </style>
 </head>
 <body>
+  <svg id="barra" width="700" height="28" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#8c7dff"/>
+        <stop offset="100%" stop-color="#b7aaff"/>
+      </linearGradient>
+      <clipPath id="round-corner">
+        <rect x="0" y="0" rx="20" ry="20" width="700" height="28"/>
+      </clipPath>
+    </defs>
+    <rect x="0" y="0" width="700" height="28" fill="#eee" rx="20" ry="20"/>
+
+    <g clip-path="url(#round-corner)">
+      <rect id="preenchida" x="0" y="0" width="0" height="28" fill="url(#grad)" rx="20" ry="20"/>
+      <rect id="shine" x="-350" y="0" width="350" height="28"
+        fill="url(#shine-gradient)" rx="20" ry="20" opacity="0.5">
+        <animate attributeName="x" from="-350" to="700" dur="4s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <text id="label" x="350" y="20" text-anchor="middle" fill="white" font-size="14" font-weight="700">
+      0%
+    </text>
+
+    <defs>
+      <linearGradient id="shine-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0)" />
+        <stop offset="50%" stop-color="rgba(255,255,255,0.3)" />
+        <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+      </linearGradient>
+    </defs>
+  </svg>
+
   <script>
     const params = new URLSearchParams(window.location.search);
-
-    const cor = params.get('cor') || '8c7dff';
-    const percent = parseInt(params.get('percent')) || 0;
+    const cor1 = params.get('cor1') || '#8c7dff';
+    const cor2 = params.get('cor2') || '#b7aaff';
+    const percent = Math.min(100, Math.max(0, parseInt(params.get('percent')) || 0));
     const texto = params.get('texto') || `${percent}%`;
-    const largura = 400;
-    const altura = 40;
-    const raio = 20;
+    const animar = !params.get('completo'); // se ?completo for passado, não anima
 
-    const gradienteId = 'grad';
-    const svg = `
-      <svg width="${largura}" height="${altura}" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="${gradienteId}" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#${cor}" />
-            <stop offset="100%" stop-color="#ffffff22" />
-          </linearGradient>
-        </defs>
-        <rect x="0" y="0" width="${largura}" height="${altura}" rx="${raio}" ry="${raio}" fill="#ddd" />
-        <rect x="0" y="0" width="${(percent / 100) * largura}" height="${altura}" rx="${raio}" ry="${raio}" fill="url(#${gradienteId})" />
-        <text x="${largura / 2}" y="${altura / 2 + 5}" fill="white" font-size="16" text-anchor="middle">${texto}</text>
-      </svg>
-    `;
+    // Atualiza gradiente
+    document.querySelector('#grad stop[offset="0%"]').setAttribute('stop-color', cor1);
+    document.querySelector('#grad stop[offset="100%"]').setAttribute('stop-color', cor2);
 
-    document.body.innerHTML = svg;
+    // Atualiza largura animada
+    const preenchida = document.getElementById('preenchida');
+    preenchida.setAttribute('width', 0);
+    preenchida.animate([
+      { width: '0' },
+      { width: `${(percent / 100) * 700}px` }
+    ], {
+      duration: 1500,
+      fill: 'forwards',
+      easing: 'ease-out'
+    });
+
+    // Texto central
+    const label = document.getElementById('label');
+    label.textContent = texto;
+
+    // Movimento leve (mexer)
+    if (animar) {
+      document.getElementById('barra').animate([
+        { transform: 'translateY(0)' },
+        { transform: 'translateY(-2px)' },
+        { transform: 'translateY(0)' }
+      ], {
+        duration: 2000,
+        iterations: Infinity
+      });
+    }
   </script>
 </body>
 </html>
