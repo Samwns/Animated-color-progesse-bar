@@ -1,9 +1,7 @@
-[
-  {
-    "tipo": "traducao",
-    "cor1": "#b67eff",
-    "cor2": "#d3a9ff",
-    "percent": 90,
-    "texto": "90% Tradução"
-  }
-]
+{
+  "tipo": "traducao",
+  "cor1": "#b67eff",
+  "cor2": "#d3a9ff",
+  "percent": 90,
+  "texto": "90% Tradução"
+}
