@@ -1,0 +1,41 @@
+name: Gerar GIF das Barras
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'input/**.json'
+      - 'gerar-gif.js'
+
+jobs:
+  gerar-gif:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Clonar repositório
+        uses: actions/checkout@v3
+
+      - name: 🟨 Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Instalar Puppeteer e dependências
+        run: |
+          npm install puppeteer
+
+      - name: 📸 Gerar imagens com Puppeteer
+        run: node gerar-gif.js
+
+      - name: ✅ Commitar imagens
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/*.png
+          git commit -m "📸 Gerar PNGs com animação" || echo "Nada novo"
+          git pull --rebase
+          git push
