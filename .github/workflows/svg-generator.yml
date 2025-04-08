@@ -1,0 +1,36 @@
+name: Gerar SVGs Estáticos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'input/**.json'
+      - 'gerar-svg.js'
+  workflow_dispatch: # também pode rodar manual
+
+jobs:
+  gerar-svg:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar o repositório
+        uses: actions/checkout@v3
+
+      - name: 🟨 Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 📦 Instalar dependências (se houver)
+        run: npm install || true
+
+      - name: ⚙️ Rodar script de geração
+        run: node gerar-svg.js
+
+      - name: ✅ Commit dos SVGs gerados
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/*.svg
+          git commit -m "🔧 Gerar SVGs automaticamente" || echo "Sem mudanças"
+          git push
