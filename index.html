@@ -1,0 +1,110 @@
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --tradução-bar: linear-gradient(90deg, #b67eff, #d3a9ff);
+    --hacking-bar: linear-gradient(90deg, #a9b7ff, #c3d1ff);
+    --imagens-bar: linear-gradient(90deg, #a7f0ff, #d5faff);
+    --menus-bar: linear-gradient(90deg, #9e8dff, #c7bfff);
+    --scripts-bar: linear-gradient(90deg, #8c7dff, #b7aaff);
+    --revisao-bar: linear-gradient(90deg, #ff9eea, #ffc9f0);
+    --postagem-bar: linear-gradient(90deg, #a998ff, #cbbdff);
+  }
+
+  .projeto-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 700px;
+    margin: 0 auto;
+    font-family: 'Quicksand', sans-serif;
+  }
+
+  .barra-progresso {
+    position: relative;
+    width: 100%;
+    height: 28px;
+    background-color: #eee;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .barra-preenchida {
+    height: 100%;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 28px;
+    position: relative;
+    z-index: 1;
+    animation: preencher 2s ease forwards;
+    background-size: 200% 100%;
+  }
+
+  .barra-shine::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    animation: shine 4s linear infinite;
+    z-index: 2;
+  }
+
+  .barra-animada:not(.completa) {
+    animation: mexer 2s ease-in-out infinite;
+  }
+
+  @keyframes shine {
+    0% { left: -50%; }
+    100% { left: 100%; }
+  }
+
+  @keyframes preencher {
+    from { width: 0; }
+    to { width: var(--progresso); }
+  }
+
+  @keyframes mexer {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+  }
+</style>
+
+<div class="projeto-container">
+
+  <div class="barra-progresso">
+    <div class="barra-preenchida barra-shine barra-animada" style="--progresso: 95%; background: var(--tradução-bar);">95% Tradução</div>
+  </div>
+
+  <div class="barra-progresso">
+    <div class="barra-preenchida barra-shine completa" style="--progresso: 100%; background: var(--hacking-bar);">100% Hacking</div>
+  </div>
+
+  <div class="barra-progresso">
+    <div class="barra-preenchida barra-shine completa" style="--progresso: 100%; background: var(--imagens-bar);">100% Imagens</div>
+  </div>
+
+  <div class="barra-progresso">
+    <div class="barra-preenchida barra-shine barra-animada" style="--progresso: 99%; background: var(--menus-bar);">99% Menus</div>
+  </div>
+
+  <div class="barra-progresso">
+    <div class="barra-preenchida barra-shine completa" style="--progresso: 100%; background: var(--scripts-bar);">100% Scripts</div>
+  </div>
+
+  <div class="barra-progresso">
+    <div class="barra-preenchida barra-shine completa" style="--progresso: 100%; background: var(--revisao-bar);">100% Revisão</div>
+  </div>
+
+  <div class="barra-progresso">
+    <div class="barra-preenchida barra-shine barra-animada" style="--progresso: 90%; background: var(--postagem-bar);">90% Postagem</div>
+  </div>
+
+</div>
+
